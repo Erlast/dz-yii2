@@ -3,21 +3,19 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\UserSearch */
+/* @var $searchModel app\models\CalendarSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-$this->title                   = Yii::t('app', 'Пользователи');
+$this->title                   = Yii::t('app', 'События');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-index">
+<div class="calendar-index">
 
 	<h1><?= Html::encode($this->title) ?></h1>
 	<?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-	<? if (!\Yii::$app->user->isGuest) { ?>
-		<p>
-			<?= Html::a(Yii::t('app', 'Добавить'), ['create'], ['class' => 'btn btn-success']) ?>
-		</p>
-	<? } ?>
+	<p>
+		<?= Html::a(Yii::t('app', 'Создать событие'), ['create'], ['class' => 'btn btn-success']) ?>
+	</p>
 	<?= GridView::widget(
 		[
 			'dataProvider' => $dataProvider,
@@ -25,13 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			'columns'      => [
 				['class' => 'yii\grid\SerialColumn'],
 				'id',
-				'username',
-				'name',
-				'surname',
-				//'password',
-				// 'salt',
-				// 'access_token',
-				// 'create_date',
+				'text:ntext',
+				'date_event',
 				[
 					'class'    => 'yii\grid\ActionColumn',
 					'template' => '{view} {update} {delete}',

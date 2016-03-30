@@ -6,7 +6,7 @@ class m160328_150004_create_table_user extends Migration
 {
     public function up()
     {
-        $this->execute("CREATE TABLE `user` (
+        $this->execute("CREATE TABLE IF NOT EXISTS `user` (
 	        `id` INT NOT NULL AUTO_INCREMENT,
 	        `username` VARCHAR(128) NOT NULL DEFAULT '',
 	        `name` VARCHAR(45) NOT NULL DEFAULT '',

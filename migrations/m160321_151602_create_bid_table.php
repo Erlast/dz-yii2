@@ -2,12 +2,11 @@
 
 use yii\db\Migration;
 
-class m160321_151602_create_bids_table extends Migration
+class m160321_151602_create_bid_table extends Migration
 {
     public function up()
     {
-        $this->execute("
-            CREATE TABLE `bid` (
+        $this->execute("CREATE TABLE IF NOT EXISTS `bid` (
 	        `id` INT NOT NULL AUTO_INCREMENT,
 	        `name` VARCHAR(255) NOT NULL DEFAULT '0',
 	        `address` VARCHAR(255) NOT NULL DEFAULT '0',
