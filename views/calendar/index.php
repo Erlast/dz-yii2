@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\CalendarSearch */
+/* @var $searchModel app\models\search\CalendarSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 $this->title                   = Yii::t('app', 'События');
 $this->params['breadcrumbs'][] = $this->title;
@@ -15,13 +15,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
 	<p>
 		<?= Html::a(Yii::t('app', 'Создать событие'), ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a(Yii::t('app', 'Мои доступы'), ['/access/myaccesses'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a(Yii::t('app', 'События друзей'), ['/access/friendsaccess'], ['class' => 'btn btn-success']) ?>
 	</p>
 	<?= GridView::widget(
 		[
 			'dataProvider' => $dataProvider,
 			'filterModel'  => $searchModel,
 			'columns'      => [
-				['class' => 'yii\grid\SerialColumn'],
 				'id',
 				'text:ntext',
 				'date_event',

@@ -1,12 +1,15 @@
 <?php
 namespace app\controllers;
 
+use app\models\Access;
 use Yii;
 use app\models\Calendar;
-use app\models\CalendarSearch;
+use app\models\search\CalendarSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * CalendarController implements the CRUD actions for Calendar model.
@@ -20,7 +23,28 @@ class CalendarController extends Controller
 	public function behaviors()
 	{
 		return [
-			'verbs' => [
+			'access' => [
+				'class' => AccessControl::className(),
+				'only'  => [
+					'mycalendar',
+					'create',
+					'update',
+					'delete'
+				],
+				'rules' => [
+					[
+						'actions' => [
+							'mycalendar',
+							'create',
+							'update',
+							'delete'
+						],
+						'allow'   => true,
+						'roles'   => ['@'],
+					],
+				],
+			],
+			'verbs'  => [
 				'class'   => VerbFilter::className(),
 				'actions' => [
 					'delete' => ['POST'],
@@ -33,10 +57,16 @@ class CalendarController extends Controller
 	 * Lists all Calendar models.
 	 * @return mixed
 	 */
-	public function actionIndex()
+	public function actionMycalendar()
 	{
 		$searchModel  = new CalendarSearch();
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider = $searchModel->search(
+			[
+				'CalendarSearch' => array_merge(
+					['creator' => Yii::$app->user->id], Yii::$app->request->queryParams
+				)
+			]
+		);
 		return $this->render(
 			'index', [
 					   'searchModel'  => $searchModel,
@@ -54,11 +84,27 @@ class CalendarController extends Controller
 	 */
 	public function actionView($id)
 	{
-		return $this->render(
-			'view', [
-					  'model' => $this->findModel($id),
-				  ]
-		);
+		$model  = $this->findModel($id);
+		$access = Access::checkAccess($model);
+		if ($access) {
+			switch ($access) {
+				case Access::ACCESS_CREATOR:
+					return $this->render(
+						'viewCreator', [
+						'model' => $model,
+					]
+					);
+					break;
+				case Access::ACCESS_GUEST:
+					return $this->render(
+						'viewGuest', [
+						'model' => $model,
+					]
+					);
+					break;
+			}
+		}
+		throw new ForbiddenHttpException("Not allowed! ");
 	}
 
 	/**
@@ -68,9 +114,6 @@ class CalendarController extends Controller
 	 */
 	public function actionCreate()
 	{
-		if (\Yii::$app->user->isGuest) {
-			return $this->redirect(['index']);
-		}
 		$model = new Calendar();
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(

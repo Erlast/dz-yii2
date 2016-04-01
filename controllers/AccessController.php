@@ -2,16 +2,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\User;
-use app\models\search\UserSearch;
+use app\models\Access;
+use app\models\search\AccessSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * UserController implements the CRUD actions for User model.
+ * AccessController implements the CRUD actions for Access model.
  */
-class UserController extends Controller
+class AccessController extends Controller
 {
 
 	/**
@@ -30,13 +30,21 @@ class UserController extends Controller
 	}
 
 	/**
-	 * Lists all User models.
+	 * Lists all Access models.
 	 * @return mixed
 	 */
-	public function actionIndex()
+	public function actionMyaccesses()
 	{
-		$searchModel  = new UserSearch();
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$searchModel  = new AccessSearch();
+		$dataProvider = $searchModel->search(
+			[
+				'AccessSearch' => array_merge(
+					[
+						'user_owner' => Yii::$app->user->id
+					], Yii::$app->request->queryParams
+				)
+			]
+		);
 		return $this->render(
 			'index', [
 					   'searchModel'  => $searchModel,
@@ -45,8 +53,33 @@ class UserController extends Controller
 		);
 	}
 
+	public function actionFriendsaccess()
+	{
+		$searchModel  = new AccessSearch();
+		$dataProvider = $searchModel->search(
+			[
+				'AccessSearch' => array_merge(
+					[
+						'user_guest' => Yii::$app->user->id,
+						'date'       => date('Y-m-d')
+					], Yii::$app->request->queryParams
+				)
+			]
+		);
+		//		$model        = new Access();
+		//		$dataProvider = $model::find()
+		//							  ->withGuest(Yii::$app->user->id)
+		//							  ->withDate(date('Y-m-d'));
+		return $this->render(
+			'friendsAccess', [
+					   'searchModel'  => $searchModel,
+					   'dataProvider' => $dataProvider,
+				   ]
+		);
+	}
+
 	/**
-	 * Displays a single User model.
+	 * Displays a single Access model.
 	 *
 	 * @param integer $id
 	 *
@@ -62,16 +95,13 @@ class UserController extends Controller
 	}
 
 	/**
-	 * Creates a new User model.
+	 * Creates a new Access model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @return mixed
 	 */
 	public function actionCreate()
 	{
-		if (\Yii::$app->user->isGuest) {
-			return $this->redirect(['index']);
-		}
-		$model = new User();
+		$model = new Access();
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(
 				[
@@ -89,7 +119,7 @@ class UserController extends Controller
 	}
 
 	/**
-	 * Updates an existing User model.
+	 * Updates an existing Access model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 *
 	 * @param integer $id
@@ -98,9 +128,6 @@ class UserController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		if (\Yii::$app->user->isGuest) {
-			return $this->redirect(['index']);
-		}
 		$model = $this->findModel($id);
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(
@@ -119,7 +146,7 @@ class UserController extends Controller
 	}
 
 	/**
-	 * Deletes an existing User model.
+	 * Deletes an existing Access model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 *
 	 * @param integer $id
@@ -128,26 +155,23 @@ class UserController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		if (\Yii::$app->user->isGuest) {
-			return $this->redirect(['index']);
-		}
 		$this->findModel($id)
 			 ->delete();
 		return $this->redirect(['index']);
 	}
 
 	/**
-	 * Finds the User model based on its primary key value.
+	 * Finds the Access model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 *
 	 * @param integer $id
 	 *
-	 * @return User the loaded model
+	 * @return Access the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = User::findOne($id))!==null) {
+		if (($model = Access::findOne($id))!==null) {
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
