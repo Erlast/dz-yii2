@@ -45,7 +45,9 @@ $config = [
 			'showScriptName'  => false,
 			'rules'           => [
 				'<controller:\w+>/<id:\d+>'              => '<controller>/view',
+				'<controller:\w+>/<id:\d+>/<date:\w+>'   => '<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+				'calendar/view/<id:\d+>/<date:\w+>'      => 'calendar/view',
 				'<controller:\w+>/<action:\w+>'          => '<controller>/<action>',
 			],
 		],
@@ -78,8 +80,8 @@ if (YII_ENV_DEV) {
 	$config['modules']['debug'] = [
 		'class' => 'yii\debug\Module',
 	];
-	$config['bootstrap'][]    = 'gii';
-	$config['modules']['gii'] = [
+	$config['bootstrap'][]      = 'gii';
+	$config['modules']['gii']   = [
 		'class' => 'yii\gii\Module',
 	];
 }

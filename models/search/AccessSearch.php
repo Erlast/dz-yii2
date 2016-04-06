@@ -42,9 +42,7 @@ class AccessSearch extends Access
     public function search($params)
     {
         $query = Access::find();
-//        echo "<pre>";
-//        print_r($params);
-//        echo "</pre>";
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

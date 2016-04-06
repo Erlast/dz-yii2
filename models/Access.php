@@ -80,14 +80,15 @@ class Access extends \yii\db\ActiveRecord
 		];
 	}
 
-	public static function checkAccess($model)
+	public static function checkAccess($model, $date)
 	{
 		if ($model->creator==Yii::$app->user->id) {
 			return self::ACCESS_CREATOR;
 		}
 		$accessNote = self::find()
-						  ->withGuest($model->id)
-						  ->withDate(date('Y-m-d'))
+						  ->withOwner($model->creator)
+						  ->withGuest(Yii::$app->user->id)
+						  ->withDate($date)
 						  ->exists();
 		if ($accessNote) {
 			return self::ACCESS_GUEST;

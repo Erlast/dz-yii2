@@ -52,6 +52,7 @@ class CalendarController extends Controller
 			],
 		];
 	}
+	
 
 	/**
 	 * Lists all Calendar models.
@@ -82,10 +83,10 @@ class CalendarController extends Controller
 	 *
 	 * @return mixed
 	 */
-	public function actionView($id)
+	public function actionView($id,$date="0000-00-00")
 	{
 		$model  = $this->findModel($id);
-		$access = Access::checkAccess($model);
+		$access = Access::checkAccess($model,$date);
 		if ($access) {
 			switch ($access) {
 				case Access::ACCESS_CREATOR:

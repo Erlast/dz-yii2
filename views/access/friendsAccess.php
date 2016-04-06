@@ -13,6 +13,9 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 $this->title                   = Yii::t('app', 'События друзей');
 $this->params['breadcrumbs'][] = $this->title;
+//echo "<pre>";
+//print_r($dataProvider);
+//echo "</pre>";
 ?>
 <div class="access-index">
 	<h1><?= Html::encode($this->title) ?></h1>
@@ -44,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						'view' => function ($url, $model) {
 							if (!\Yii::$app->user->isGuest) {
 								return Html::a(
-									'<span class="glyphicon glyphicon-eye-open"></span>', '/access/view/'.$model->id
+									'<span class="glyphicon glyphicon-eye-open"></span>', '/calendar/view?id='.$model->id."&date=".$model->date
 								);
 							}
 						},

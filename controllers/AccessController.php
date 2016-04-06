@@ -61,15 +61,10 @@ class AccessController extends Controller
 				'AccessSearch' => array_merge(
 					[
 						'user_guest' => Yii::$app->user->id,
-						'date'       => date('Y-m-d')
 					], Yii::$app->request->queryParams
 				)
 			]
 		);
-		//		$model        = new Access();
-		//		$dataProvider = $model::find()
-		//							  ->withGuest(Yii::$app->user->id)
-		//							  ->withDate(date('Y-m-d'));
 		return $this->render(
 			'friendsAccess', [
 					   'searchModel'  => $searchModel,
